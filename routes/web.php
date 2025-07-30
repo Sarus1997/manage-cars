@@ -32,7 +32,7 @@ Route::middleware(['web', CustomAuth::class])->group(function () {
 
   // Loan Management
   Route::get('/loan', [LoanController::class, 'index']);
-  Route::post('/loan/calculate', [LoanController::class, 'calculate']);
+  Route::post('/loan/calculate', [LoanController::class, 'calculate'])->name('loan.calculate');
 
   // Admin Routes
   Route::middleware(AdminOnly::class)->group(function () {

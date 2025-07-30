@@ -141,9 +141,10 @@
   }
 </style>
 
-<x-nav />
+
 
 <body class="bg-light">
+  <x-nav />
   <br>
   <br>
   <div class="container py-5">

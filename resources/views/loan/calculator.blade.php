@@ -145,79 +145,73 @@
 
 <body>
 
-  <section class="container mt-4">
-    <h3>Loan Calculator</h3>
-    <div class="mb-2">
-      <input type="number" id="amount" class="form-control" placeholder="ยอดจัด">
-    </div>
-    <div class="mb-2">
-      <input type="number" id="rate" class="form-control" placeholder="ดอกเบี้ย % ต่อปี">
-    </div>
-    <div class="mb-2">
-      <input type="number" id="terms" class="form-control" placeholder="จำนวนงวด">
-    </div>
-    <button id="calcBtn" class="btn btn-primary">คำนวณ</button>
-    <button id="clearBtn" class="btn btn-secondary" style="display:none">เคลียร์</button>
+  <br>
+  <br>
 
-    <table class="table mt-3" id="resultTable">
-      <thead>
-        <tr>
-          <th>งวด</th>
-          <th>ยอดผ่อน</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <br>
+  <br>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-gradient text-white text-center"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h4 class="mb-0"><i class="fas fa-calculator me-2"></i> คำนวณยอดผ่อนรถ</h4>
+          </div>
+          <div class="card-body p-4">
+            <form id="loanForm">
+              <div class="mb-3">
+                <label for="amount" class="form-label">ราคารถ (บาท)</label>
+                <input type="number" class="form-control" id="amount" required>
+              </div>
+              <div class="mb-3">
+                <label for="rate" class="form-label">อัตราดอกเบี้ย (%)</label>
+                <input type="number" step="0.01" class="form-control" id="rate" required>
+              </div>
+              <div class="mb-3">
+                <label for="months" class="form-label">จำนวนเดือนผ่อน</label>
+                <input type="number" class="form-control" id="months" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-calculator"></i> คำนวณ
+              </button>
+            </form>
+
+            <div id="result" class="alert alert-info mt-4 d-none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <x-footer />
+
   <script>
-    function validateInput(id) {
-      let val = $(id).val();
-      if (val < 0 || isNaN(val)) {
-        alert("กรุณาใส่ตัวเลขที่ถูกต้อง");
-        $(id).val('');
-      }
-    }
+    document.querySelector("#loanForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-    $('#amount').on('input', function() {
-      validateInput(this);
-    });
-    $('#rate').on('input', function() {
-      validateInput(this);
-    });
-    $('#terms').on('input', function() {
-      validateInput(this);
-    });
+      let amount = document.getElementById("amount").value;
+      let rate = document.getElementById("rate").value;
+      let months = document.getElementById("months").value;
 
-    $('#calcBtn').click(function() {
-      $.post('/loan/calculate', {
-        _token: "{{ csrf_token() }}",
-        amount: $('#amount').val(),
-        rate: $('#rate').val(),
-        terms: $('#terms').val()
-      }, function(res) {
-        let tbody = $('#resultTable tbody');
-        tbody.empty();
-        res.forEach(r => {
-          let row = `<tr data-terms="${r.terms}" class="${r.payment>5000?'table-danger':''}">
-                <td>${r.terms}</td><td>${r.payment}</td>
-            </tr>`;
-          tbody.append(row);
-        });
-        $('#clearBtn').show();
+      let res = await fetch("/loan/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+          amount,
+          rate,
+          months
+        })
       });
-    });
 
-    $(document).on('click', '#resultTable tr', function() {
-      $('#resultTable tr').removeClass('table-primary');
-      $(this).addClass('table-primary');
-    });
-
-    $('#clearBtn').click(function() {
-      $('#amount,#rate,#terms').val('');
-      $('#resultTable tbody').empty();
-      $(this).hide();
+      let data = await res.json();
+      let resultDiv = document.getElementById("result");
+      resultDiv.classList.remove("d-none");
+      resultDiv.innerHTML = `ค่างวดต่อเดือน: <strong>${data.installment.toLocaleString()} บาท</strong>`;
     });
   </script>
 
