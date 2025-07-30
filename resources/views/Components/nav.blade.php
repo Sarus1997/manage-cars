@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
   <div class="container">
-    <a class="navbar-brand brand-logo" href="/">
+    <a class="navbar-brand brand-logo" href="/dashboard">
       <i class="fas fa-car me-2"></i>ระบบจัดการรถยนต์
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
