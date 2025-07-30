@@ -147,12 +147,12 @@
   <x-nav />
   <br>
   <br>
-  <div class="container py-5">
+  <div class=" py-5">
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <div class="card shadow">
           <div class="card-body">
-            <h3 class="mb-4 text-center text-primary"><i class="bi bi-car-front-fill"></i> Car Inventory</h3>
+            <h3 class="mb-4 text-center text-primary"><i class="bi bi-car-front-fill"></i>&nbsp; คลังข้อมูลรถยนต์</h3>
 
             <form id="addCarForm" class="row g-3">
               @csrf
