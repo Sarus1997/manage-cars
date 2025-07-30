@@ -54,17 +54,39 @@ class AuthController extends Controller
     return back()->withErrors(['อีเมลหรือรหัสผ่านไม่ถูกต้อง หรือบัญชีถูกปิดใช้งาน']);
   }
 
+  public function showResetForm()
+  {
+    return view('auth.reset_request');
+  }
+
+  // รีเซ็ทหรัสผ่าน
   public function resetPassword(Request $req)
   {
+    $req->validate([
+      'email' => 'required|email',
+      'new_password' => 'required|min:6',
+    ]);
+
     $users = $this->readCSV();
+    $found = false;
+
     foreach ($users as &$user) {
       if ($user['email'] === $req->email) {
-        $user['password'] = Hash::make('123456');
+        $user['password'] = Hash::make($req->new_password);
+        $found = true;
+        break;
       }
     }
-    $this->writeCSV($users);
-    return back()->with('msg', 'Password ถูกรีเซตเป็น 123456 แล้ว');
+
+    if ($found) {
+      $this->writeCSV($users);
+      return redirect('/login')->with('success_msg', 'ตั้งรหัสผ่านใหม่เรียบร้อยแล้ว กรุณาเข้าสู่ระบบ');
+    } else {
+      return back()->withErrors(['ไม่พบอีเมลนี้ในระบบ']);
+    }
   }
+
+
 
   public function showRegister()
   {

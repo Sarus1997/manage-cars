@@ -34,30 +34,49 @@ class CarController extends Controller
   public function index()
   {
     $cars = $this->readCSV();
-    return view('cars', compact('cars'));
+    return view('cars.index', compact('cars'));
   }
 
   public function store(Request $req)
   {
     $cars = $this->readCSV();
-    $id = count($cars) + 1;
-    $cars[] = [
+    $id = collect($cars)->max('id') + 1;
+
+    $newCar = [
       'id' => $id,
       'brand' => $req->brand,
       'model' => $req->model,
       'price' => $req->price,
       'color' => $req->color,
       'year' => $req->year,
+      'status' => 'available',
     ];
+
+    $cars[] = $newCar;
     $this->writeCSV($cars);
-    return response()->json(['success' => true, 'cars' => $cars]);
+    return response()->json(['success' => true, 'car' => $newCar]);
   }
 
   public function delete($id)
   {
     $cars = $this->readCSV();
     $cars = array_filter($cars, fn($c) => $c['id'] != $id);
-    $this->writeCSV(array_values($cars));
+    $cars = array_values($cars);
+
+    if (!empty($cars)) {
+      $this->writeCSV($cars);
+    } else {
+      $this->writeCSV([[
+        'id' => '',
+        'brand' => '',
+        'model' => '',
+        'year' => '',
+        'color' => '',
+        'price' => '',
+        'status' => ''
+      ]]);
+    }
+
     return response()->json(['success' => true, 'cars' => $cars]);
   }
 }

@@ -13,17 +13,21 @@ Route::get('/', fn() => redirect('/login'));
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/reset-password', [AuthController::class, 'showResetForm']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
-// Dashboard - ใช้ class notation แทน string
 Route::middleware(['web', CustomAuth::class])->group(function () {
-  Route::get('/index', fn() => view('index'));
+  Route::get('/dashboard', fn() => view('index'));
 
   Route::get('/cars', [CarController::class, 'index']);
+
   Route::post('/cars/store', [CarController::class, 'store']);
+
   Route::delete('/cars/delete/{id}', [CarController::class, 'delete']);
 
   Route::get('/loan', [LoanController::class, 'index']);
