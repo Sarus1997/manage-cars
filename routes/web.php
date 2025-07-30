@@ -24,15 +24,17 @@ Route::get('/logout', [AuthController::class, 'logout']);
 Route::middleware(['web', CustomAuth::class])->group(function () {
   Route::get('/dashboard', fn() => view('index'));
 
+  // Car Management
   Route::get('/cars', [CarController::class, 'index']);
-
   Route::post('/cars/store', [CarController::class, 'store']);
-
+  Route::put('/cars/update/{id}', [CarController::class, 'update']);
   Route::delete('/cars/delete/{id}', [CarController::class, 'delete']);
 
+  // Loan Management
   Route::get('/loan', [LoanController::class, 'index']);
   Route::post('/loan/calculate', [LoanController::class, 'calculate']);
 
+  // Admin Routes
   Route::middleware(AdminOnly::class)->group(function () {
     Route::get('/admin/users', [AdminController::class, 'index']);
     Route::post('/admin/users/reset/{id}', [AdminController::class, 'reset']);
