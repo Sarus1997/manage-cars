@@ -134,6 +134,28 @@
         font-size: 1.1rem;
       }
     }
+
+    .menu-item a {
+      display: block;
+      padding: 12px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+      border-radius: 8px;
+    }
+
+    .menu-item a:hover {
+      background-color: #ccc;
+      transform: translateX(5px);
+      color: #0d6efd;
+    }
+
+    .menu-item i {
+      width: 24px;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -146,38 +168,45 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-          <div class="card welcome-card">
-            <div class="card-header text-white text-center">
-              <h4 class="mb-0">
+          <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+            <!-- Header -->
+            <div class="card-header bg-primary text-white text-center py-4">
+              <h4 class="mb-1">
                 <i class="fas fa-home me-2"></i>ยินดีต้อนรับ, {{ session('user')['name'] }}
               </h4>
-              <p class="mb-0 mt-2 opacity-75">เลือกเมนูที่ต้องการใช้งาน</p>
+              <p class="mb-0 opacity-75">เลือกเมนูที่ต้องการใช้งาน</p>
             </div>
+
+            <!-- Body -->
             <div class="card-body p-0">
               <ul class="list-group list-group-flush">
+                <!-- Menu Item -->
                 <li class="list-group-item menu-item">
-                  <a href="/cars">
-                    <i class="fas fa-warehouse"></i>
+                  <a href="/cars" class="d-flex align-items-center">
+                    <i class="fas fa-warehouse fa-lg text-primary me-3"></i>
                     <span>จัดการคลังรถ</span>
                   </a>
                 </li>
+
                 <li class="list-group-item menu-item">
-                  <a href="/loan">
-                    <i class="fas fa-calculator"></i>
+                  <a href="/loan" class="d-flex align-items-center">
+                    <i class="fas fa-calculator fa-lg text-success me-3"></i>
                     <span>คำนวณยอดผ่อน</span>
                   </a>
                 </li>
+
                 @if(session('user')['role'] === 'admin')
                 <li class="list-group-item menu-item">
-                  <a href="/admin/users">
-                    <i class="fas fa-users-cog"></i>
+                  <a href="/admin/users" class="d-flex align-items-center">
+                    <i class="fas fa-users-cog fa-lg text-warning me-3"></i>
                     <span>จัดการผู้ใช้</span>
                   </a>
                 </li>
                 @endif
+
                 <li class="list-group-item menu-item">
-                  <a href="/logout" class="text-danger">
-                    <i class="fas fa-sign-out-alt"></i>
+                  <a href="/logout" class="d-flex align-items-center text-danger">
+                    <i class="fas fa-sign-out-alt fa-lg me-3"></i>
                     <span>ออกจากระบบ</span>
                   </a>
                 </li>
